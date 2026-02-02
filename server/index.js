@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./src/config/db.js";
 import authRoutes from "./src/routes/authRoutes.js";
+import decisionRoutes from "./src/routes/decisionRoute.js";
 
 dotenv.config();
 connectDB();
@@ -15,16 +16,17 @@ app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/decisions", decisionRoutes);
 
 // Health check
 app.get("/health", (req, res) => {
   res.json({
     status: "OK",
-    message: "MindVault API running 🚀",
+    message: "MindVault API running ",
   });
 });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>
-  console.log(`🔥 Server running on port ${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 );
