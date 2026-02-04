@@ -3,7 +3,7 @@ import api from "../api/axios";
 import { createContext } from "./Context";
 
 
-createContext;
+createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
