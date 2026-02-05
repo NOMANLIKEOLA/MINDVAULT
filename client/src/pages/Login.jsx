@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../context/useAuth";
+import api from "../api/axios";
+import { loginUser } from "../utils/auth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -8,7 +9,6 @@ const Login = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -17,10 +17,20 @@ const Login = () => {
     setLoading(true);
 
     try {
-      await login(email, password);
+      const res = await api.post("/auth/login", {
+        email,
+        password,
+      });
+
+      // store user + token
+      loginUser(res.data);
+
+      // redirect to dashboard
       navigate("/");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      setError(
+        err.response?.data?.message || "Invalid email or password"
+      );
     } finally {
       setLoading(false);
     }
@@ -49,13 +59,14 @@ const Login = () => {
           required
         />
 
-        <button disabled={loading}>
+        <button type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>
 
       <p>
-        Don’t have an account? <Link to="/register">Register</Link>
+        Don’t have an account?{" "}
+        <Link to="/register">Register</Link>
       </p>
     </div>
   );

@@ -1,12 +1,12 @@
 import axios from "axios";
+import { getUser } from "../utils/auth";
 
 const api = axios.create({
   baseURL: "http://localhost:5000/api",
 });
 
-// Attach token automatically
 api.interceptors.request.use((config) => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getUser();
   if (user?.token) {
     config.headers.Authorization = `Bearer ${user.token}`;
   }

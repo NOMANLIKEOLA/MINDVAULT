@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../context/useAuth";
+import api from "../api/axios";
+import { loginUser } from "../utils/auth";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -9,7 +10,6 @@ const Register = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -18,10 +18,21 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await register(name, email, password);
+      const res = await api.post("/auth/register", {
+        name,
+        email,
+        password,
+      });
+
+      // store user + token
+      loginUser(res.data);
+
+      // redirect to dashboard
       navigate("/");
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
+      setError(
+        err.response?.data?.message || "Registration failed"
+      );
     } finally {
       setLoading(false);
     }
@@ -58,13 +69,14 @@ const Register = () => {
           required
         />
 
-        <button disabled={loading}>
+        <button type="submit" disabled={loading}>
           {loading ? "Creating account..." : "Register"}
         </button>
       </form>
 
       <p>
-        Already have an account? <Link to="/login">Login</Link>
+        Already have an account?{" "}
+        <Link to="/login">Login</Link>
       </p>
     </div>
   );
