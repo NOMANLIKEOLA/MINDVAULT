@@ -11,16 +11,37 @@ const Navbar = () => {
   };
 
   return (
-    <nav style={{ display: "flex", gap: "1rem", padding: "1rem" }}>
-      <Link to="/">Dashboard</Link>
-      <Link to="/decisions">Decisions</Link>
-      <Link to="/reviews">Reviews</Link>
+    <nav
+      style={{
+        background: "var(--bg-surface)",
+        borderBottom: "1px solid var(--border-soft)",
+      }}
+    >           
+      <div
+        className="container"         
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "1.5rem",
+        }}
+      >
+        <strong style={{ fontSize: "1.1rem" }}>MindVault</strong>
 
-      <div style={{ marginLeft: "auto" }}>
-        {user && <span>{user.name}</span>}
-        <button onClick={handleLogout} style={{ marginLeft: "1rem" }}>
-          Logout
-        </button>
+        <Link to="/">Dashboard</Link>
+        <Link to="/decisions">Decisions</Link>
+        <Link to="/reviews">Reviews</Link>
+
+        <div style={{ marginLeft: "auto", display: "flex", gap: "1rem" }}>
+          <span style={{ color: "var(--text-secondary)" }}>
+            {user?.name}
+          </span>
+          <button
+            onClick={handleLogout}
+            style={{ background: "var(--danger)" }}
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </nav>
   );

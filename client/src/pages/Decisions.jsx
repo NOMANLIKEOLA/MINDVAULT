@@ -6,16 +6,16 @@ const Decisions = () => {
   const [decisions, setDecisions] = useState([]);
   const [title, setTitle] = useState("");
   const [context, setContext] = useState("");
-  const [confidenceLevel, setConfidenceLevel] = useState(5);
+  const [confidence, setConfidence] = useState(5);
 
-  const fetchDecisions = async () => {
+  const loadDecisions = async () => {
     const res = await api.get("/decisions");
     setDecisions(res.data);
   };
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchDecisions();
+    loadDecisions();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -26,23 +26,23 @@ const Decisions = () => {
       context,
       options: ["Option A", "Option B"],
       decisionTaken: "Option A",
-      confidenceLevel,
+      confidenceLevel: confidence,
     });
 
     setTitle("");
     setContext("");
-    setConfidenceLevel(5);
-    fetchDecisions();
+    setConfidence(5);
+    loadDecisions();
   };
 
   return (
     <>
       <Navbar />
 
-      <div style={{ padding: "1rem" }}>
+      <div className="container">
         <h1>Decisions</h1>
 
-        <form onSubmit={handleSubmit}>
+        <form className="card" onSubmit={handleSubmit}>
           <input
             placeholder="Decision title"
             value={title}
@@ -55,23 +55,30 @@ const Decisions = () => {
             value={context}
             onChange={(e) => setContext(e.target.value)}
             required
+            style={{ marginTop: "1rem" }}
           />
 
           <input
             type="number"
             min="1"
             max="10"
-            value={confidenceLevel}
-            onChange={(e) => setConfidenceLevel(Number(e.target.value))}
+            value={confidence}
+            onChange={(e) => setConfidence(Number(e.target.value))}
+            style={{ marginTop: "1rem" }}
           />
 
-          <button>Add Decision</button>
+          <button style={{ marginTop: "1.5rem" }}>
+            Add Decision
+          </button>
         </form>
 
-        <ul>
+        <ul style={{ listStyle: "none", padding: 0, marginTop: "2rem" }}>
           {decisions.map((d) => (
-            <li key={d._id}>
-              <strong>{d.title}</strong> — confidence {d.confidenceLevel}
+            <li key={d._id} className="card" style={{ marginBottom: "1rem" }}>
+              <strong>{d.title}</strong>
+              <p style={{ color: "var(--text-secondary)" }}>
+                Confidence {d.confidenceLevel}
+              </p>
             </li>
           ))}
         </ul>

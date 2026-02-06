@@ -5,31 +5,27 @@ import Navbar from "../components/Navbar";
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);
 
-  const fetchReviews = async () => {
-    const res = await api.get("/reviews");
-    setReviews(res.data);
-  };
-
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchReviews();
+    api.get("/reviews").then((res) => {
+      setReviews(res.data);
+    });
   }, []);
 
   return (
     <>
       <Navbar />
 
-      <div style={{ padding: "1rem" }}>
+      <div className="container">
         <h1>Reviews</h1>
 
-        <ul>
+        <ul style={{ listStyle: "none", padding: 0, marginTop: "2rem" }}>
           {reviews.map((r) => (
-            <li key={r._id}>
+            <li key={r._id} className="card" style={{ marginBottom: "1rem" }}>
               <strong>{r.decision?.title}</strong>
-              <br />
-              Outcome: {r.outcomeRating}
-              <br />
-              Lesson: {r.lessonLearned}
+              <p>Outcome: {r.outcomeRating}</p>
+              <p style={{ color: "var(--text-secondary)" }}>
+                {r.lessonLearned}
+              </p>
             </li>
           ))}
         </ul>

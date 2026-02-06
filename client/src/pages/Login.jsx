@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { loginUser } from "../utils/auth";
 
@@ -17,57 +17,55 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await api.post("/auth/login", {
-        email,
-        password,
-      });
-
-      // store user + token
+      const res = await api.post("/auth/login", { email, password });
       loginUser(res.data);
-
-      // redirect to dashboard
       navigate("/");
+    // eslint-disable-next-line no-unused-vars
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Invalid email or password"
-      );
+      setError("Invalid email or password");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <h1>Login</h1>
+    <div className="container" style={{ maxWidth: "420px", marginTop: "6rem" }}>
+      <div className="card">
+        <h1>Login</h1>
 
-      {error && <p className="error">{error}</p>}
+        {error && <p className="error">{error}</p>}
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{ marginTop: "1rem" }}
+          />
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={loading}
+            style={{ marginTop: "1.5rem", width: "100%" }}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
 
-      <p>
-        Don’t have an account?{" "}
-        <Link to="/register">Register</Link>
-      </p>
+        <p style={{ marginTop: "1.5rem", color: "var(--text-secondary)" }}>
+          No account? <Link to="/register">Create one</Link>
+        </p>
+      </div>
     </div>
   );
 };
